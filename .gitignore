@@ -39,3 +39,4 @@ Thumbs.db
 Bin/
 bin/
 obj/
+*.user
