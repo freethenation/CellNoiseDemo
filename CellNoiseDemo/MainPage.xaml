@@ -4,9 +4,41 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    d:DesignHeight="300" d:DesignWidth="400">
+    d:DesignHeight="400" d:DesignWidth="600">
 
-    <Grid x:Name="LayoutRoot" Background="White">
-
-    </Grid>
+	<Grid x:Name="LayoutRoot" Background="#111111">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="200"/>
+			<ColumnDefinition/>
+		</Grid.ColumnDefinitions>
+		<StackPanel Grid.Column="0" Grid.Row="1" Orientation="Vertical" Margin="5">
+			<TextBlock Text="Cell Noise" Style="{StaticResource TextBlockStyle}" FontSize="20" FontWeight="Bold" TextAlignment="Center"/>
+			<TextBlock Text="Demo" Style="{StaticResource TextBlockStyle}" FontSize="20" FontWeight="Bold" TextAlignment="Center"/>
+			<TextBlock Text="Zoom:" Style="{StaticResource TextBlockStyle}"/>
+			<Slider Height="25" Value="{Binding Zoom, Mode=TwoWay}" Minimum="-10" Maximum="10" />
+			<TextBlock Text="Seed:" Style="{StaticResource TextBlockStyle}"/>
+			<StackPanel Orientation="Horizontal" Height="25">
+				<TextBox Name="txtSeed" Width="120" Text="{Binding Seed, Mode=TwoWay}" />
+				<Button Content="Random" Name="butRndSeed" Margin="5,0,0,0" Style="{StaticResource ButtonStyle}" Click="butRndSeed_Click" />
+			</StackPanel>
+			<TextBlock Text="Distance Metric:" Style="{StaticResource TextBlockStyle}"/>
+			<ComboBox SelectionChanged="ComboBox_SelectionChanged">
+				<ComboBox.Items>
+					<ComboBoxItem IsSelected="True" Content="Euclidean" Tag="Euclidean"/>
+					<ComboBoxItem Content="Manhattan" Tag="Manhattan"/>
+					<ComboBoxItem Content="Chebyshev" Tag="Chebyshev"/>
+				</ComboBox.Items>
+			</ComboBox>
+			<TextBlock Text="Combination Function:" Style="{StaticResource TextBlockStyle}"/>
+			<ComboBox SelectionChanged="ComboBox_SelectionChanged_1">
+				<ComboBox.Items>
+					<ComboBoxItem IsSelected="True" Content="D1" Tag="D1"/>
+					<ComboBoxItem Content="D2 - D1" Tag="D2MinusD1"/>
+					<ComboBoxItem Content="D3 - D1" Tag="D3MinusD1"/>
+				</ComboBox.Items>
+			</ComboBox>
+			<Button Content="Export Image" Margin="0,5,0,0" Style="{StaticResource ButtonStyle}" Click="Button_Click" />
+		</StackPanel>
+		<Image Grid.Column="1" Name="img" Stretch="UniformToFill" />
+	</Grid>
 </UserControl>
