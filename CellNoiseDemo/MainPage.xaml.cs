@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using System.Windows.Media.Imaging;
 
 namespace CellNoiseDemo
 {
@@ -34,11 +35,6 @@ namespace CellNoiseDemo
 		private void ComboBox_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
 		{
 			dataObject.CombinationFunctionString = ((sender as ComboBox).SelectedItem as ComboBoxItem).Tag as string;
-		}
-
-		private void Button_Click(object sender, RoutedEventArgs e)
-		{
-
 		}
 	}
 }

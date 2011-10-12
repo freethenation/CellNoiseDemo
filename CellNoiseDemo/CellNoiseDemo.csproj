@@ -72,6 +72,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="FillBitmapBackgroundWorker.cs" />
     <Compile Include="CellNoiseDemoDataObject.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -81,6 +82,7 @@
     <Compile Include="Vector3.cs" />
     <Compile Include="Vector4.cs" />
     <Compile Include="WorleyNoise.cs" />
+    <Compile Include="WriteableBitmapExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">

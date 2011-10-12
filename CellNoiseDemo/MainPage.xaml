@@ -15,7 +15,7 @@
 			<TextBlock Text="Cell Noise" Style="{StaticResource TextBlockStyle}" FontSize="20" FontWeight="Bold" TextAlignment="Center"/>
 			<TextBlock Text="Demo" Style="{StaticResource TextBlockStyle}" FontSize="20" FontWeight="Bold" TextAlignment="Center"/>
 			<TextBlock Text="Zoom:" Style="{StaticResource TextBlockStyle}"/>
-			<Slider Height="25" Value="{Binding Zoom, Mode=TwoWay}" Minimum="-10" Maximum="10" />
+			<Slider Height="25" Value="{Binding Zoom, Mode=TwoWay}" Minimum=".5" Maximum="20" />
 			<TextBlock Text="Seed:" Style="{StaticResource TextBlockStyle}"/>
 			<StackPanel Orientation="Horizontal" Height="25">
 				<TextBox Name="txtSeed" Width="120" Text="{Binding Seed, Mode=TwoWay}" />
@@ -32,13 +32,12 @@
 			<TextBlock Text="Combination Function:" Style="{StaticResource TextBlockStyle}"/>
 			<ComboBox SelectionChanged="ComboBox_SelectionChanged_1">
 				<ComboBox.Items>
-					<ComboBoxItem IsSelected="True" Content="D1" Tag="D1"/>
-					<ComboBoxItem Content="D2 - D1" Tag="D2MinusD1"/>
+					<ComboBoxItem Content="D1" Tag="D1"/>
+					<ComboBoxItem IsSelected="True" Content="D2 - D1" Tag="D2MinusD1"/>
 					<ComboBoxItem Content="D3 - D1" Tag="D3MinusD1"/>
 				</ComboBox.Items>
 			</ComboBox>
-			<Button Content="Export Image" Margin="0,5,0,0" Style="{StaticResource ButtonStyle}" Click="Button_Click" />
 		</StackPanel>
-		<Image Grid.Column="1" Name="img" Stretch="UniformToFill" />
+		<Image Grid.Column="1" Name="img" Stretch="UniformToFill" Source="{Binding Bitmap}"/>
 	</Grid>
 </UserControl>

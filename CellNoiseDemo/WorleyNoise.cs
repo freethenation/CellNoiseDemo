@@ -5,19 +5,19 @@ using System.Text;
 
 namespace CellNoiseDemo
 {
+	public struct PointColor
+	{
+		public PointColor(Vector4 point, Vector4 color)
+		{
+			Point = point;
+			Color = color;
+		}
+		public Vector4 Point;
+		public Vector4 Color;
+	}
+
 	public static class WorleyNoise
 	{
-		public struct PointColor
-		{
-			public PointColor(Vector4 point, Vector4 color)
-			{
-				Point = point;
-				Color = color;
-			}
-			public Vector4 Point;
-			public Vector4 Color;
-		}
-
 		public static float EuclidianDistanceFunc(Vector3 p1, Vector3 p2)
 		{
 			return (p1.X - p2.X) * (p1.X - p2.X) + (p1.Y - p2.Y) * (p1.Y - p2.Y) + (p1.Z - p2.Z) * (p1.Z - p2.Z);
@@ -110,6 +110,12 @@ namespace CellNoiseDemo
 			return 9;
 		}
 
+		/// <summary>
+		/// Inserts value into array using insertion sort. If the value is greater than the largest value in the array
+		/// it will not be added to the array.
+		/// </summary>
+		/// <param name="arr">The array to insert the value into.</param>
+		/// <param name="value">The value to insert into the array.</param>
 		private static void insert(float[] arr, float value)
 		{
 			float temp;
