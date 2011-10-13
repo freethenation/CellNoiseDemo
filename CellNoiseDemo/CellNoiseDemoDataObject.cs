@@ -33,9 +33,8 @@ namespace CellNoiseDemo
 			}
 		}
 				
-		private Vector4 bitmapFillFunc(Vector4 pos)
+		private Vector4 bitmapFillFunc(Vector3 pos)
 		{
-			PointColor pc = new PointColor(pos, new Vector4());
 			float[] dists = new float[3];
 
 			Func<Vector3, Vector3, float> distanceFunction = null;
@@ -66,8 +65,7 @@ namespace CellNoiseDemo
 					break;
 			}
 
-			pc = WorleyNoise.WorleyFunc(pc, Seed, distanceFunction, ref dists, combinerFunc);
-			return pc.Color;
+			return WorleyNoise.WorleyFunc(pos, Seed, distanceFunction, ref dists, combinerFunc);
 		}
 
 		void CellNoiseDemoDataObject_PropertyChanged(object sender, PropertyChangedEventArgs e)

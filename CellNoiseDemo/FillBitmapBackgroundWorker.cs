@@ -51,13 +51,13 @@ namespace CellNoiseDemo
 				}
 				for (int x = 0; x < _writeableBitmap.PixelWidth; x++)
 				{
-					Vector4 color = _fillFunction(new Vector4((float)x / width, (float)y / height, 0f, 1f) * _zoom);
+					Vector4 color = _fillFunction(new Vector3((float)x / width, (float)y / height, 0f) * _zoom);
 					_writeableBitmap.SetPixeli(index++, (byte)(color.W * 255), (byte)(color.X * 255), (byte)(color.Y * 255), (byte)(color.Z * 255));
 				}
 			}
 		}
 
-		public void FillBitmapAsync(float zoom, Func<Vector4, Vector4> fillFunction, WriteableBitmap writeableBitmap)
+		public void FillBitmapAsync(float zoom, Func<Vector3, Vector4> fillFunction, WriteableBitmap writeableBitmap)
 		{
 			if (this.Cancel())
 			{
@@ -75,7 +75,7 @@ namespace CellNoiseDemo
 			base.OnRunWorkerCompleted(e);
 		}
 		private float _zoom;
-		private Func<Vector4, Vector4> _fillFunction;
+		private Func<Vector3, Vector4> _fillFunction;
 		private WriteableBitmap _writeableBitmap;
 	}
 }

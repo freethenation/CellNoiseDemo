@@ -5,17 +5,6 @@ using System.Text;
 
 namespace CellNoiseDemo
 {
-	public struct PointColor
-	{
-		public PointColor(Vector4 point, Vector4 color)
-		{
-			Point = point;
-			Color = color;
-		}
-		public Vector4 Point;
-		public Vector4 Color;
-	}
-
 	public static class WorleyNoise
 	{
 		public static float EuclidianDistanceFunc(Vector3 p1, Vector3 p2)
@@ -41,35 +30,38 @@ namespace CellNoiseDemo
 		/// <param name="seed">The seed for the noise function</param>
 		/// <param name="distanceFunc">The function used to calculate the distance between two points. Several of these are defined as statics on the WorleyNoise class.</param>
 		/// <param name="distanceArray">An array which will store the distances computed by the Worley noise function. The length of the array determines how many distances will be computed.</param>
-		/// <param name="worleyFunction">The function used to color the location. The color takes the populated distanceArray
+		/// <param name="combineDistancesFunc">The function used to color the location. The color takes the populated distanceArray
 		/// param and returns a float which is the greyscale value outputed by the worley noise function.</param>
-		/// <returns></returns>
-		public static PointColor WorleyFunc(this PointColor input, int seed, Func<Vector3, Vector3, float> distanceFunc, ref float[] distanceArray, Func<float[], float> worleyFunction)
+		/// <returns>The color worley noise returns at the input position</returns>
+		public static Vector4 WorleyFunc(this Vector3 input, int seed, Func<Vector3, Vector3, float> distanceFunc, ref float[] distanceArray, Func<float[], float> combineDistancesFunc)
 		{
-			//Init values in distance array to large values
-			for (int i = 0; i < distanceArray.Length; i++)
-			{
-				distanceArray[i] = 6666;
-			}
-
+			//Declare some values for later use
 			uint lastRandom, numberFeaturePoints;
 			Vector3 randomDiff, featurePoint;
-			int x = (int)Math.Floor(input.Point.X);
-			int y = (int)Math.Floor(input.Point.Y);
-			int z = (int)Math.Floor(input.Point.Z);
 			int cubeX, cubeY, cubeZ;
+
+			//Initialize values in distance array to large values
+			for (int i = 0; i < distanceArray.Length; i++)
+				distanceArray[i] = 6666;
+
+			//1. Determine which cube the evaluation point is in
+			int evalCubeX = (int)Math.Floor(input.X);
+			int evalCubeY = (int)Math.Floor(input.Y);
+			int evalCubeZ = (int)Math.Floor(input.Z);
 
 			for (int i = -1; i < 2; ++i)
 				for (int j = -1; j < 2; ++j)
 					for (int k = -1; k < 2; ++k)
 					{
-						cubeX = x + i;
-						cubeY = y + j;
-						cubeZ = z + k;
-						lastRandom = lcgRandom(hash((uint)(cubeX + seed), (uint)(cubeY), (uint)(cubeZ)));
-						// Find the number of feature points in the cube
-						numberFeaturePoints = probLookup(lastRandom);
+						cubeX = evalCubeX + i;
+						cubeY = evalCubeY + j;
+						cubeZ = evalCubeZ + k;
 
+						//2. Generate a reproducible random number generator for the cube
+						lastRandom = lcgRandom(hash((uint)(cubeX + seed), (uint)(cubeY), (uint)(cubeZ)));
+						//3. Determine how many feature points are in the cube
+						numberFeaturePoints = probLookup(lastRandom);
+						//4. Randomly place the feature points in the cube
 						for (uint l = 0; l < numberFeaturePoints; ++l)
 						{
 							lastRandom = lcgRandom(lastRandom);
@@ -83,17 +75,18 @@ namespace CellNoiseDemo
 
 							featurePoint = new Vector3(randomDiff.X + (float)cubeX, randomDiff.Y + (float)cubeY, randomDiff.Z + (float)cubeZ);
 
-							insert(distanceArray, distanceFunc(input.Point.Xyz, featurePoint));
+							//5. Find the feature point closest to the evaluation point. 
+							//This is done by inserting the distances to the feature points into a sorted list
+							insert(distanceArray, distanceFunc(input, featurePoint));
 						}
-
+						//6. Check the neighboring cubes to ensure their are no closer evaluation points.
+						// This is done by repeating steps 1 through 5 above for each neighboring cube
 					}
 
-			float color = worleyFunction(distanceArray);
-			input.Color.X = color;
-			input.Color.Y = color;
-			input.Color.Z = color;
-			input.Color = Vector4.Clamp(input.Color, new Vector4(0,0,0,0), new Vector4(1,1,1,1));
-			return input; 
+			float color = combineDistancesFunc(distanceArray);
+			if(color < 0) color = 0;
+			if(color > 1) color = 1;
+			return new Vector4(color, color, color, 1);
 		}
 
 		// Generated with "AccountingForm[N[Table[CDF[PoissonDistribution[4], i], {i, 1, 9}], 20]*2^32]" //"N[Table[CDF[PoissonDistribution[4], i], {i, 1, 9}], 20]"
