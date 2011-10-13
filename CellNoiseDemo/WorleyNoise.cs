@@ -1,39 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace CellNoiseDemo
 {
-	public static class WorleyNoise
+	public static class CellNoise
 	{
-		public static float EuclidianDistanceFunc(Vector3 p1, Vector3 p2)
-		{
-			return (p1.X - p2.X) * (p1.X - p2.X) + (p1.Y - p2.Y) * (p1.Y - p2.Y) + (p1.Z - p2.Z) * (p1.Z - p2.Z);
-		}
-
-		public static float ManhattanDistanceFunc(Vector3 p1, Vector3 p2)
-		{
-			return Math.Abs(p1.X - p2.X) + Math.Abs(p1.Y - p2.Y) + Math.Abs(p1.Z - p2.Z);
-		}
-
-		public static float ChebyshevDistanceFunc(Vector3 p1, Vector3 p2)
-		{
-			Vector3 diff = p1 - p2;
-			return Math.Max(Math.Max(Math.Abs(diff.X), Math.Abs(diff.Y)), Math.Abs(diff.Z));
-		}
-
 		/// <summary>
-		/// The Worley noise function
+		/// Generates Cell Noise
 		/// </summary>
-		/// <param name="input">The location at which the Worley noise function should be evaluated at.</param>
+		/// <param name="input">The location at which the cell noise function should be evaluated at.</param>
 		/// <param name="seed">The seed for the noise function</param>
 		/// <param name="distanceFunc">The function used to calculate the distance between two points. Several of these are defined as statics on the WorleyNoise class.</param>
-		/// <param name="distanceArray">An array which will store the distances computed by the Worley noise function. The length of the array determines how many distances will be computed.</param>
+		/// <param name="distanceArray">An array which will store the distances computed by the Worley noise function. 
+		/// The length of the array determines how many distances will be computed.</param>
 		/// <param name="combineDistancesFunc">The function used to color the location. The color takes the populated distanceArray
 		/// param and returns a float which is the greyscale value outputed by the worley noise function.</param>
 		/// <returns>The color worley noise returns at the input position</returns>
-		public static Vector4 WorleyFunc(this Vector3 input, int seed, Func<Vector3, Vector3, float> distanceFunc, ref float[] distanceArray, Func<float[], float> combineDistancesFunc)
+		public static Vector4 CellNoiseFunc(this Vector3 input, int seed, Func<Vector3, Vector3, float> distanceFunc, ref float[] distanceArray, Func<float[], float> combineDistancesFunc)
 		{
 			//Declare some values for later use
 			uint lastRandom, numberFeaturePoints;
@@ -89,7 +71,28 @@ namespace CellNoiseDemo
 			return new Vector4(color, color, color, 1);
 		}
 
-		// Generated with "AccountingForm[N[Table[CDF[PoissonDistribution[4], i], {i, 1, 9}], 20]*2^32]" //"N[Table[CDF[PoissonDistribution[4], i], {i, 1, 9}], 20]"
+		public static float EuclidianDistanceFunc(Vector3 p1, Vector3 p2)
+		{
+			return (p1.X - p2.X) * (p1.X - p2.X) + (p1.Y - p2.Y) * (p1.Y - p2.Y) + (p1.Z - p2.Z) * (p1.Z - p2.Z);
+		}
+
+		public static float ManhattanDistanceFunc(Vector3 p1, Vector3 p2)
+		{
+			return Math.Abs(p1.X - p2.X) + Math.Abs(p1.Y - p2.Y) + Math.Abs(p1.Z - p2.Z);
+		}
+
+		public static float ChebyshevDistanceFunc(Vector3 p1, Vector3 p2)
+		{
+			Vector3 diff = p1 - p2;
+			return Math.Max(Math.Max(Math.Abs(diff.X), Math.Abs(diff.Y)), Math.Abs(diff.Z));
+		}
+
+		/// <summary>
+		/// Given a uniformly distributed random number this function returns the number of feature points in a given cube.
+		/// </summary>
+		/// <param name="value">a uniformly distributed random number</param>
+		/// <returns>The number of feature points in a cube.</returns>
+		// Generated using mathmatica with "AccountingForm[N[Table[CDF[PoissonDistribution[4], i], {i, 1, 9}], 20]*2^32]"
 		private static uint probLookup(uint value)
 		{
 			if (value < 393325350) return 1;
@@ -122,26 +125,33 @@ namespace CellNoiseDemo
 		}
 
 		/// <summary>
-		/// LCG Random Number Generator
+		/// LCG Random Number Generator.
+		/// LCG: http://en.wikipedia.org/wiki/Linear_congruential_generator
 		/// </summary>
 		/// <param name="lastValue">The last value calculated by the lcg or a seed</param>
 		/// <returns>A new random number</returns>
-		public static uint lcgRandom(uint lastValue)
+		private static uint lcgRandom(uint lastValue)
 		{
 			return (uint)((1103515245u * lastValue + 12345u) % 0x100000000u);
 		}
 
 
-		private const uint OFFSET_BASIS = 2166136261;
-		private const uint FNV_PRIME = 16777619;
-
 		/// <summary>
-		/// Hash of three uints
-		/// 
+		/// Constant used in FNV hash function.
+		/// FNV hash: http://isthe.com/chongo/tech/comp/fnv/#FNV-source
+		/// </summary>
+		private const uint OFFSET_BASIS = 2166136261;
+		/// <summary>
+		/// Constant used in FNV hash function
+		/// FNV hash: http://isthe.com/chongo/tech/comp/fnv/#FNV-source
+		/// </summary>
+		private const uint FNV_PRIME = 16777619;
+		/// <summary>
+		/// Hashes three integers into a single integer using FNV hash.
 		/// FNV hash: http://isthe.com/chongo/tech/comp/fnv/#FNV-source
 		/// </summary>
 		/// <returns>hash value</returns>
-		public static uint hash(uint i, uint j, uint k)
+		private static uint hash(uint i, uint j, uint k)
 		{
 			return (uint)((((((OFFSET_BASIS ^ (uint)i) * FNV_PRIME) ^ (uint)j) * FNV_PRIME) ^ (uint)k) * FNV_PRIME);
 		}

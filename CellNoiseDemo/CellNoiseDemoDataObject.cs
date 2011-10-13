@@ -41,13 +41,13 @@ namespace CellNoiseDemo
 			switch (DistanceMetric)
 			{
 				case DistanceMetrics.Euclidean:
-					distanceFunction = WorleyNoise.EuclidianDistanceFunc;
+					distanceFunction = CellNoise.EuclidianDistanceFunc;
 					break;
 				case DistanceMetrics.Manhattan:
-					distanceFunction = WorleyNoise.ManhattanDistanceFunc;
+					distanceFunction = CellNoise.ManhattanDistanceFunc;
 					break;
 				case DistanceMetrics.Chebyshev:
-					distanceFunction = WorleyNoise.ChebyshevDistanceFunc;
+					distanceFunction = CellNoise.ChebyshevDistanceFunc;
 					break;
 			}
 
@@ -65,7 +65,7 @@ namespace CellNoiseDemo
 					break;
 			}
 
-			return WorleyNoise.WorleyFunc(pos, Seed, distanceFunction, ref dists, combinerFunc);
+			return CellNoise.CellNoiseFunc(pos, Seed, distanceFunction, ref dists, combinerFunc);
 		}
 
 		void CellNoiseDemoDataObject_PropertyChanged(object sender, PropertyChangedEventArgs e)
