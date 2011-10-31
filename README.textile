@@ -1,1 +1,1 @@
-This repository hosts the source of a demo for a tutorial on cell noise located at "http://aftbit.com/cellnoise/":http://aftbit.com/cellnoise/. If you want to know more about cell noise and this demo read the "tutorial":http://aftbit.com/cellnoise/.
+This repository hosts the source of a demo for a tutorial on cell noise located at "http://aftbit.com/cell-noise-2/":http://aftbit.com/cell-noise-2/. If you want to know more about cell noise and this demo read the "tutorial":http://aftbit.com/cell-noise-2/.
